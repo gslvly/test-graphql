@@ -1,0 +1,11 @@
+query ($id: ID = "asf",$name1:String , $firstName: String!) {
+  user1: user(id: $id) {
+    id
+    age
+    name(firstName: $firstName)
+    friends {
+    	name(name1: $name1)
+  	}
+  }
+}
+

@@ -2,12 +2,16 @@ const { makeExecutableSchema } = require('graphql-tools')
 
 const typeDefs = `
   type Query {
-    user:User
+    user(id: ID):User
   }
   type User {
-    age: String
-    name: String
+    age: Int
+    name(firstName: String!):String
     id: ID
+    friends: [Man]
+  }
+  type Man {
+    name(name1: String): String
   }
   schema {
     query: Query
@@ -18,14 +22,16 @@ const resolvers = {
   Query: {
 
     user(...a) {
-      console.log(a)
-      return new Promise((resolve,reject) => {
-        setTimeout(_ => {
-          resolve({ name: 'ggg', id: 100 })
-        }, 3000)
-      })
+
+      return { name: 'ggg', id: 100, age: 200, friends: ['sf', 34] }
     }
   },
+  Man: {
+    name(obj, args) {
+      console.log(obj, args)
+      return 'sdfsf'
+    }
+  }
   // Query: {
   //   user(user) {
   //     console.log(user)
