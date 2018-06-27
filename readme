@@ -9,3 +9,53 @@ query ($id: ID = "asf",$name1:String , $firstName: String!) {
   }
 }
 
+
+ query user ($withuser: Boolean!){  //@skip(if: Boolean) 如果参数为 true，跳过此字段。
+     me {
+      age @include(if: $withuser)
+    }
+
+    user {
+      id
+      friends {
+        name
+      }
+    }
+  }
+
+apolloClient
+  .mutate({
+    mutation: gql`
+      mutation age($age: Int) {
+        age(age: $age)
+      }
+    `,
+    variables: { age: 100 },
+    operationName: 'age'
+  })
+
+
+  this.$apollo.mutate({
+    mutation: gql` mutation
+      age($age: Int){
+        age(age:$age)
+      }
+    `,
+    variables: {
+      age: 1000
+    }
+  }).then(res => {
+    
+    console.log(res)
+  })  
+
+apolloClient.query({
+  query: gql`
+    query user {
+      user {
+        id
+      }
+    }
+  `
+})
+.then()

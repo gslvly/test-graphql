@@ -1,4 +1,4 @@
-const { makeExecutableSchema } = require('graphql-tools')
+const { makeExecutableSchema, mergeSchemas } = require('graphql-tools')
 
 const typeDefs = `
   type Query {
@@ -20,27 +20,62 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
+    user(obj, args, ctx) {
 
-    user(...a) {
-
-      return { name: 'ggg', id: 100, age: 200, friends: ['sf', 34] }
+      return { name: 'ggg', id: 100, age: 200, friends: [], fsdf: 123 }
+    }
+  },
+  User: {
+    name(obj, args) {
+      // console.log(obj, args)
+      return args.firstName
     }
   },
   Man: {
-    name(obj, args) {
-      console.log(obj, args)
-      return 'sdfsf'
+    name(obj) {
+      return obj.id
     }
   }
-  // Query: {
-  //   user(user) {
-  //     console.log(user)
-  //     return {
-  //       id: 1,
-  //       name: 'sfasdf'
-  //     }
-  //   }
-  // },
+}
+const me = `
+  type Query {
+    me:Me
+    name: String
+  }
+  type Me {
+    age: Int
+    friends: [Friends]
+  }
+  enum Friends {
+    f1
+    f2
+    f3
+  }
+  type Mutation  {
+    age(age: Int): Int
+  }
+  schema{
+    query: Query
+    mutation: Mutation
+  }
+`
+const re = {
+  Query: {
+    me() {
+      return { age: 1000}
+    },
+    name() {
+      return 'test'
+    }
+  },
+  Mutation: {
+    age(obj, args,ctx) {
+      console.log(obj,args,ctx.body)
+      return args.age
+    }
+  }
 }
 
-module.exports = makeExecutableSchema({ typeDefs, resolvers })
+const schema1 = makeExecutableSchema({ typeDefs, resolvers })
+const schema2 = makeExecutableSchema({ typeDefs: me, resolvers: re })
+module.exports = mergeSchemas({ schemas: [schema1, schema2] })

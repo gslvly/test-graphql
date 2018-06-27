@@ -4,7 +4,7 @@ import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
-
+import gql from 'graphql-tag'
 import router from './router'
 
 const httpLink = new HttpLink({
@@ -19,6 +19,16 @@ const apolloClient = new ApolloClient({
   connectToDevTools: true
 })
 
+apolloClient.query({
+  query: gql`
+    query user {
+      user {
+        id
+      }
+    }
+  `,
+  variables: { age: 100 }
+})
 // Install the vue plugin
 Vue.use(VueApollo)
 

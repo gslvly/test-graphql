@@ -9,8 +9,12 @@ const Koa = require('koa'),
 const router = new KoaRouter()
 
 const app = new Koa()
-router.get('/graphql', graphqlKoa({ schema: user }))
-router.post('/graphql', graphqlKoa({ schema: user }))
+router.get('/graphql', (ctx, next) =>
+  graphqlKoa({ schema: user, context: ctx })(ctx)
+)
+router.post('/graphql', (ctx, next) =>
+  graphqlKoa({ schema: user, context: ctx })(ctx)
+)
 router.get('/graphiql', graphiqlKoa({ endpointURL: '/graphql' }))
 
 app

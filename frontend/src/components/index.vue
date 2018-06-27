@@ -1,6 +1,8 @@
 <template>
   <div>
-    {{hello}}
+    {{$apollo.data.user}}
+    <br>
+    user: {{user}}
   </div>
 </template>
 
@@ -10,21 +12,36 @@ import gql from 'graphql-tag'
 export default {
   data() {
     return {
-      hello: ''
+      user: ''
     }
   },
-  apollo: {
-    hello: {
-      query: gql`query fff($message: String!){
-        hello(msg: $message)
-      }`,
-      variables: {
-        message: '我是msg'
-      }
-    }
-  },
+  // apollo: {
+  //   user: {
+  //     query: gql`query age($age:Int){
+  //       age(age: $age)
+  //     }`,
+  //     result(...a) {
+  //       this.user = 'fsadfaf'
+  //     },
+  //     variables: {
+  //       age: 1000
+  //     },
+  //   },
+  // },
   created() {
-    console.log(this.hello)
+    this.$apollo.mutate({
+      mutation: gql` mutation
+        age($age: Int){
+          age(age:$age)
+        }
+      `,
+      variables: {
+        age: 1000
+      }
+    }).then(res => {
+      this.user = res.data
+      console.log(res)
+    })
   }
 }
 </script>
